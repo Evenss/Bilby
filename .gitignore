@@ -1,0 +1,26 @@
+.build/
+build/
+.DS_Store
+.swiftpm/
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.dSYM/
+*.log
+*.tmp
+*.swp
+*~
+__pycache__/
+*.py[cod]
+.venv/
+
+# Local credentials and signing material
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.key
+*.pem
+*.mobileprovision
+*.provisionprofile

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Bilby 探头">
+  <defs>
+    <clipPath id="bilby-ear-cutouts" clipPathUnits="userSpaceOnUse">
+      <path clip-rule="evenodd" d="M0 0H100V100H0Z M17 34C12.5 33.5 14.5 43 22.5 50.5C27 54.5 32.5 57.3 35.3 55.8C40.3 53.3 33.5 42.5 26.2 37.8C22.5 35.5 19 34.2 17 34Z M73 56C68 53 66.2 47.1 68.2 39C70.5 29.5 77.5 22.4 84.2 21.8C87.7 21.5 88.4 29.2 86 37.2C83.7 45.1 78.4 52.8 73 56Z"/>
+    </clipPath>
+  </defs>
+  <g fill="currentColor" clip-path="url(#bilby-ear-cutouts)">
+    <path d="M25 63C16 58 7 49 5.5 39C3.2 30 6 25 13 25C27 24 42 34 47.5 47.5C49 51 49 54 47 57C41 60 33 63 25 63Z"/>
+    <path d="M60 48C57 35 65 20 77 13C86 7.5 92 13 94 23C98 38 89 51 79 60C75 63 69 61 65 57C62 53 61 50 60 48Z"/>
+    <path d="M17 85C15 85 16 78 19 71C22 65 25 63 24 60C31 51 43 46 54 46C67 45 78 55 85 66C90 74 92 81 91 85H87C86 85 87 81 85 79C84 77 83 77 81 76C81 69 77 64 73 64C67 63 63 70 59 80C58.7 81 58 81 57.5 80C53 71 47 64 41 64C34 64 29 70 29 76C25 77 23 81 23 85Z"/>
+  </g>
+  <ellipse fill="currentColor" cx="44.3" cy="77.2" rx="4.1" ry="4.7"/>
+  <ellipse fill="currentColor" cx="72" cy="77.2" rx="4" ry="4.7"/>
+</svg>
