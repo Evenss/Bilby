@@ -4,6 +4,8 @@
 
 ## 0.0.2 — 2026-11-08 (Preview)
 
+- Rebuild (build 7): move the GitHub shortcut to the upper-right corner and add
+  a subtle, single-pixel divider above Quit.
 - English and Simplified Chinese interfaces, following the macOS app language.
 - Installation-location checks and Accessibility permission recovery guidance.
 - Background verification of icon hiding, with a bounded retry and rollback of

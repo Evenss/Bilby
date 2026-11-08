@@ -9,6 +9,7 @@ Tools/build.sh
 
 app="$PWD/build/Bilby.app"
 app_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")"
+app_build="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app/Contents/Info.plist")"
 minimum_os="$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$app/Contents/Info.plist")"
 architecture="$(/usr/bin/lipo -archs "$app/Contents/MacOS/BarTidy")"
 if [[ ! "$app_version" =~ '^[0-9]+\.[0-9]+\.[0-9]+$' ]]; then
@@ -20,7 +21,12 @@ if [[ "$minimum_os" != "27.2" || "$architecture" != "arm64" ]]; then
     exit 1
 fi
 
-dmg_name="Bilby-${app_version}-macOS-arm64.dmg"
+package_suffix="${BARTIDY_DMG_SUFFIX:-}"
+if [[ -n "$package_suffix" && ! "$package_suffix" =~ '^[A-Za-z0-9][A-Za-z0-9._-]*$' ]]; then
+    print -u2 "Expected a filename-safe DMG suffix."
+    exit 1
+fi
+dmg_name="Bilby-${app_version}${package_suffix:+-${package_suffix}}-macOS-arm64.dmg"
 dmg_file="$PWD/build/$dmg_name"
 if [[ -e "$dmg_file" || -e "$dmg_file.sha256" ]]; then
     print -u2 "Output already exists: $dmg_file"
@@ -31,8 +37,17 @@ cleanup() { rm -rf "$dmg_stage"; }
 trap cleanup EXIT
 ditto "$app" "$dmg_stage/Bilby.app"
 ln -s /Applications "$dmg_stage/Applications"
+source_note="https://github.com/Evenss/Bilby/tree/v$app_version"
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    if [[ -n "$(git status --porcelain)" ]]; then
+        source_note="Local build $app_build with unpublished changes / 本地构建，包含未发布改动
+Repository / 仓库: https://github.com/Evenss/Bilby"
+    elif [[ "$(git rev-parse HEAD)" != "$(git rev-parse "v$app_version^{commit}" 2>/dev/null || true)" ]]; then
+        source_note="https://github.com/Evenss/Bilby/tree/$(git rev-parse HEAD)"
+    fi
+fi
 cat > "$dmg_stage/Install.txt" <<EOF
-Bilby $app_version — preview / 预发布
+Bilby $app_version (build $app_build) — preview / 预发布
 
 Requires macOS 27.2 and Apple Silicon.
 1. Drag Bilby.app into Applications.
@@ -47,7 +62,7 @@ https://support.apple.com/en-us/102445
 本预发布版尚未经过 Apple 公证。首次打开若被系统拦截，请参考上方
 Apple 官方说明，由你决定是否允许此应用。
 
-Source / 源码: https://github.com/Evenss/Bilby/tree/v$app_version
+Source / 源码: $source_note
 Licenses / 许可证: Bilby.app/Contents/Resources
 EOF
 

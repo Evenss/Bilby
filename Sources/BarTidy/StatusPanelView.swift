@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct StatusPanelView: View {
+    @Environment(\.displayScale) private var displayScale
     static let size = NSSize(width: 406, height: 488)
     private static let repositoryURL = URL(string: "https://github.com/Evenss/Bilby")!
     private static let githubIcon: NSImage? = {
@@ -13,6 +14,32 @@ struct StatusPanelView: View {
     let close: () -> Void
     let quit: () -> Void
 
+    private var githubButton: some View {
+        Button {
+            close()
+            NSWorkspace.shared.open(Self.repositoryURL)
+        } label: {
+            Group {
+                if let icon = Self.githubIcon {
+                    Image(nsImage: icon)
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 18, height: 18)
+                } else {
+                    Text("GitHub")
+                }
+            }
+            .frame(minWidth: 28, minHeight: 28)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.secondary)
+        .help(L10n.text("Open GitHub repository"))
+        .accessibilityLabel(L10n.text("Open Bilby's GitHub repository"))
+        .accessibilityIdentifier("Bilby.GitHub")
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 9) {
@@ -21,6 +48,7 @@ struct StatusPanelView: View {
                     .accessibilityHidden(true)
                 Text(BrandIcon.name).font(.system(size: 15, weight: .regular))
                 Spacer()
+                githubButton
             }
             .padding(.horizontal, 20)
             .frame(height: 48)
@@ -28,29 +56,6 @@ struct StatusPanelView: View {
             LayoutView(model: model, close: close)
 
             HStack {
-                Button {
-                    close()
-                    NSWorkspace.shared.open(Self.repositoryURL)
-                } label: {
-                    Group {
-                        if let icon = Self.githubIcon {
-                            Image(nsImage: icon)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 18, height: 18)
-                        } else {
-                            Text("GitHub")
-                        }
-                    }
-                    .frame(minWidth: 28, minHeight: 28)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-                .help(L10n.text("Open GitHub repository"))
-                .accessibilityLabel(L10n.text("Open Bilby's GitHub repository"))
-                .accessibilityIdentifier("Bilby.GitHub")
                 Spacer()
                 Button(L10n.text("Quit"), action: quit)
                     .buttonStyle(.plain)
@@ -64,6 +69,13 @@ struct StatusPanelView: View {
             }
             .padding(.horizontal, 26)
             .frame(height: 40)
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(.white.opacity(0.06))
+                    .frame(height: 1 / displayScale)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background {
