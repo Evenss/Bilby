@@ -11,6 +11,10 @@ bundle="$PWD/build/Bilby.app"
 mkdir -p "$bundle/Contents/MacOS" "$bundle/Contents/Resources"
 cp "$binary_directory/BarTidy" "$bundle/Contents/MacOS/BarTidy"
 cp Resources/Info.plist "$bundle/Contents/Info.plist"
+for language in en zh-Hans; do
+    mkdir -p "$bundle/Contents/Resources/$language.lproj"
+    cp "Sources/BarTidy/Resources/$language.lproj/Localizable.strings" "$bundle/Contents/Resources/$language.lproj/Localizable.strings"
+done
 cp LICENSE "$bundle/Contents/Resources/LICENSE"
 cp THIRD_PARTY_NOTICES.md "$bundle/Contents/Resources/THIRD_PARTY_NOTICES.md"
 cp Resources/GitHubLink.pdf "$bundle/Contents/Resources/GitHubLink.pdf"

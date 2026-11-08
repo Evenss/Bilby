@@ -16,16 +16,16 @@ struct StatusPanelView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 9) {
-                Image(nsImage: BrandIcon.menuBarImage())
-                    .renderingMode(.template)
+                PanelBrandIcon()
+                    .frame(width: BrandIcon.menuBarCanvas, height: BrandIcon.menuBarCanvas)
                     .accessibilityHidden(true)
-                Text(BrandIcon.name).font(.system(size: 15, weight: .semibold))
+                Text(BrandIcon.name).font(.system(size: 15, weight: .regular))
                 Spacer()
             }
             .padding(.horizontal, 20)
             .frame(height: 48)
 
-            LayoutView(model: model)
+            LayoutView(model: model, close: close)
 
             HStack {
                 Button {
@@ -48,18 +48,18 @@ struct StatusPanelView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
-                .help("打开 GitHub 仓库")
-                .accessibilityLabel("打开 Bilby 的 GitHub 仓库")
+                .help(L10n.text("Open GitHub repository"))
+                .accessibilityLabel(L10n.text("Open Bilby's GitHub repository"))
                 .accessibilityIdentifier("Bilby.GitHub")
                 Spacer()
-                Button("退出", action: quit)
+                Button(L10n.text("Quit"), action: quit)
                     .buttonStyle(.plain)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 6)
                     .frame(height: 28)
                     .contentShape(Rectangle())
                     .keyboardShortcut("q", modifiers: .command)
-                    .help("退出 Bilby 并恢复所有图标")
+                    .help(L10n.text("Quit Bilby and restore all icons"))
                     .accessibilityIdentifier("Bilby.Quit")
             }
             .padding(.horizontal, 26)

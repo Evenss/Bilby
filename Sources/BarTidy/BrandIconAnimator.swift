@@ -1,13 +1,20 @@
 import AppKit
 
-/// Updates only the status item's template image; panel actions never wait.
+/// Changes only template images; neither drawing surface changes layout.
 @MainActor final class BrandIconAnimator {
     private weak var button: NSStatusBarButton?
+    private weak var imageView: NSImageView?
     private let restingImage = BrandIcon.menuBarImage()
     private let frames = (0...31).map { BrandIcon.menuBarImage(pose: BrandIcon.earPose(at: Double($0) / 31)) }
     private var animation: Task<Void, Never>?
 
     init(button: NSStatusBarButton) { self.button = button }
+    init(imageView: NSImageView) { self.imageView = imageView }
+
+    private func show(_ image: NSImage) {
+        button?.image = image
+        imageView?.image = image
+    }
 
     func play() {
         // A second click still toggles the panel immediately, while one short
@@ -22,9 +29,9 @@ import AppKit
                 catch { return }
                 guard !Task.isCancelled else { return }
                 if NSWorkspace.shared.accessibilityDisplayShouldReduceMotion { break }
-                self.button?.image = self.frames[index]
+                self.show(self.frames[index])
             }
-            self.button?.image = self.restingImage
+            self.show(self.restingImage)
             self.animation = nil
         }
     }
@@ -32,6 +39,6 @@ import AppKit
     func stop() {
         animation?.cancel()
         animation = nil
-        button?.image = restingImage
+        show(restingImage)
     }
 }

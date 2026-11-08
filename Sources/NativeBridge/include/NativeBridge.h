@@ -10,6 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)applyAllowedBundles:(NSArray<NSString *> *)bundles
                 completion:(void (^)(NSError * _Nullable error))completion;
 - (void)restore;
+/// Cancel unfinished activations while retaining the last active assertion.
+- (void)cancelPendingActivations;
 @end
 
 NS_ASSUME_NONNULL_END

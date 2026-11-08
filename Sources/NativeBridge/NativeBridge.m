@@ -6,8 +6,9 @@
 #import <objc/message.h>
 
 static NSError *BTError(NSString *message) {
+    NSString *localized = NSLocalizedStringWithDefaultValue(message, @"Localizable", NSBundle.mainBundle, message, nil);
     return [NSError errorWithDomain:@"BarTidy.Visibility" code:1
-                           userInfo:@{NSLocalizedDescriptionKey: message}];
+                           userInfo:@{NSLocalizedDescriptionKey: localized}];
 }
 
 static void BTInvalidate(id assertion) {
@@ -47,7 +48,7 @@ static void BTInvalidate(id assertion) {
     NSUInteger generation = ++_generation;
     if (!self.available) {
         [self restore];
-        completion(BTError(@"当前系统的状态栏接口不可用，所有图标保持显示。"));
+        completion(BTError(@"Menu bar visibility is unavailable on this system. All icons remain visible."));
         return;
     }
     @try {
@@ -59,7 +60,7 @@ static void BTInvalidate(id assertion) {
         id candidate = [[NSClassFromString(@"MBAssessmentModeAssertion") alloc] init];
         if (!configuration || !candidate) {
             [self restore];
-            completion(BTError(@"无法创建状态栏配置，所有图标保持显示。"));
+            completion(BTError(@"Couldn't create the menu bar configuration. All icons remain visible."));
             return;
         }
         __block BOOL finished = NO;
@@ -71,7 +72,7 @@ static void BTInvalidate(id assertion) {
             finished = YES;
             if (generation != self->_generation) {
                 BTInvalidate(candidate);
-                completion(BTError(@"状态栏操作已取消。"));
+                completion(BTError(@"The menu bar request was cancelled."));
             } else if (error) {
                 BTInvalidate(candidate);
                 [self restore];
@@ -87,11 +88,11 @@ static void BTInvalidate(id assertion) {
             candidate, @selector(activateWithConfiguration:completionHandler:), configuration,
             ^(NSError *error) { dispatch_async(dispatch_get_main_queue(), ^{ finish(error); }); });
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            if (!finished) finish(BTError(@"系统未及时响应，已恢复所有图标。"));
+            if (!finished) finish(BTError(@"The system didn't respond in time. All icons have been restored."));
         });
     } @catch (NSException *exception) {
         [self restore];
-        completion(BTError(exception.reason ?: @"状态栏接口调用失败。"));
+        completion(BTError(exception.reason ?: @"The menu bar request failed."));
     }
 }
 
@@ -99,6 +100,11 @@ static void BTInvalidate(id assertion) {
     ++_generation;
     BTInvalidate(_assertion);
     _assertion = nil;
+}
+
+- (void)cancelPendingActivations {
+    NSAssert(NSThread.isMainThread, @"Visibility changes require the main thread");
+    ++_generation;
 }
 
 - (void)dealloc { BTInvalidate(_assertion); }

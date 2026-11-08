@@ -53,7 +53,7 @@ enum BrandIcon {
 
     static var svg: String {
         """
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Bilby 探头">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Bilby">
           <defs>
             <clipPath id="bilby-ear-cutouts" clipPathUnits="userSpaceOnUse">
               <path clip-rule="evenodd" d="M0 0H100V100H0Z \(leftEarCutout) \(rightEarCutout)"/>

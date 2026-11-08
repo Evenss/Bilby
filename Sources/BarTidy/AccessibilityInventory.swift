@@ -51,6 +51,11 @@ enum AXReader {
 }
 
 enum AccessibilityInventory {
+    struct Snapshot: Sendable {
+        var items: [MenuBarItem]
+        var isReadable: Bool
+    }
+
     struct Application: Sendable {
         let pid: pid_t
         let bundleID: String
@@ -96,7 +101,27 @@ enum AccessibilityInventory {
                                          pid: app.pid, frame: frame, appURL: app.url, isSystem: isSystem))
             }
         }
-        return items.sorted { $0.frame.midX < $1.frame.midX }
+        return sortByPosition(items)
+    }
+
+    static func sortByPosition(_ items: [MenuBarItem]) -> [MenuBarItem] {
+        items.sorted {
+            // Overflow scenes can report one shared rectangle for several
+            // items. AX child enumeration then has no physical order; use a
+            // stable identity rather than let each refresh reshuffle ties.
+            $0.frame.midX == $1.frame.midX ? $0.id < $1.id : $0.frame.midX < $1.frame.midX
+        }
+    }
+
+    /// A missing menu-bar scene is not evidence that its icons disappeared.
+    /// Only the hosted scene is authoritative on the supported macOS version;
+    /// per-app fallback inventories can still include an already hidden icon.
+    static func read(_ apps: [Application]) -> Snapshot {
+        guard let agent = apps.first(where: { $0.bundleID == "com.apple.MenuBarAgent" }) else {
+            return Snapshot(items: [], isReadable: false)
+        }
+        let items = hostedItems(agent: agent, apps: apps)
+        return Snapshot(items: items, isReadable: items.contains { $0.isSystem || $0.identity.bundleID == "local.even.BarTidy" })
     }
 
     /// On macOS 27 MenuBarAgent owns the status-item scenes, including overflow
@@ -151,13 +176,13 @@ enum AccessibilityInventory {
             result.append(MenuBarItem(identity: ItemIdentity(id: "\(base)/\(ordinal)", bundleID: entry.app.bundleID, name: name),
                                       pid: entry.app.pid, frame: entry.frame, appURL: entry.app.url, isSystem: system))
         }
-        return result
+        return sortByPosition(result)
     }
 
     static let systemNames = [
-        "com.apple.menuextra.battery": "电池", "com.apple.menuextra.wifi": "Wi-Fi",
-        "com.apple.menuextra.controlcenter": "控制中心", "com.apple.menuextra.clock": "时钟",
-        "com.apple.menuextra.bluetooth": "蓝牙", "com.apple.menuextra.volume": "声音",
-        "com.apple.menuextra.focusmode": "专注模式", "com.apple.menuextra.audiovideo": "音频和视频控制"
+        "com.apple.menuextra.battery": L10n.text("Battery"), "com.apple.menuextra.wifi": "Wi-Fi",
+        "com.apple.menuextra.controlcenter": L10n.text("Control Center"), "com.apple.menuextra.clock": L10n.text("Clock"),
+        "com.apple.menuextra.bluetooth": L10n.text("Bluetooth"), "com.apple.menuextra.volume": L10n.text("Sound"),
+        "com.apple.menuextra.focusmode": L10n.text("Focus"), "com.apple.menuextra.audiovideo": L10n.text("Audio and video controls")
     ]
 }

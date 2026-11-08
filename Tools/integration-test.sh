@@ -26,6 +26,8 @@ for label in A B; do
     fixture_domains+=("com.bartidy.fixture.$label")
     cp "$app/Contents/MacOS/BarTidy" "$fixture/Contents/MacOS/BarTidy"
     cp Resources/Info.plist "$fixture/Contents/Info.plist"
+    mkdir -p "$fixture/Contents/Resources"
+    cp -R "$app/Contents/Resources/en.lproj" "$app/Contents/Resources/zh-Hans.lproj" "$fixture/Contents/Resources/"
     /usr/bin/plutil -replace CFBundleIdentifier -string "com.bartidy.fixture.$label" "$fixture/Contents/Info.plist"
     /usr/bin/plutil -replace CFBundleName -string "BarTidy Fixture $label" "$fixture/Contents/Info.plist"
     /usr/bin/plutil -replace CFBundleDisplayName -string "BarTidy Fixture $label" "$fixture/Contents/Info.plist"
@@ -46,6 +48,7 @@ python3 - "$result" <<'PY'
 import json, sys
 result = json.load(open(sys.argv[1]))
 checks = ['accessibility', 'nativeVisibility', 'overflowInventoryPassed',
+          'hideConfirmedInInventory', 'cancelPendingKeepsActiveAssertion',
           'systemOrderUnchanged', 'visibilityApplied', 'pointerUnchanged',
           'restorePassed', 'lateActivationCancelled', 'editorInitialHide',
           'editorTemporaryReveal', 'oneSwitchPerApp', 'restoreEndsReveal', 'switchAppliesHide',
@@ -54,6 +57,11 @@ checks = ['accessibility', 'nativeVisibility', 'overflowInventoryPassed',
           'editorIgnoresLegacyOrder', 'hiddenAppsOutsideSystemOrder',
           'revealedOrderMatchesSystem', 'shownPositionRefreshed',
           'unchangedHiddenSelectionEndsReveal', 'completed']
+checks += ['editorBackgroundConfirmation', 'resumeReappliesSavedVisibility', 'resumeHideConfirmedInInventory']
+checks += ['nativeErrorLocalized']
+if result.get('pointerUnchanged') is False and result.get('pointerInputEvents', 0) > 0:
+    print('Pointer-position check inconclusive: mouse movement occurred during sampling; no input was blocked.')
+    checks.remove('pointerUnchanged')
 print(json.dumps({key: result.get(key) for key in checks}, ensure_ascii=False, indent=2))
 if result.get('error'): print(result['error'])
 sys.exit(0 if all(result.get(key) is True for key in checks) else 1)

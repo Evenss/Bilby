@@ -38,3 +38,6 @@ jobs:
           cmp THIRD_PARTY_NOTICES.md build/Bilby.app/Contents/Resources/THIRD_PARTY_NOTICES.md
           cmp Resources/GitHubLink.pdf build/Bilby.app/Contents/Resources/GitHubLink.pdf
           cmp Resources/ThirdParty/RemixIcon.LICENSE build/Bilby.app/Contents/Resources/ThirdParty/RemixIcon.LICENSE
+          for language in en zh-Hans; do
+            cmp "Sources/BarTidy/Resources/$language.lproj/Localizable.strings" "build/Bilby.app/Contents/Resources/$language.lproj/Localizable.strings"
+          done

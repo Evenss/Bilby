@@ -90,22 +90,22 @@ import OSLog
         let menu = NSMenu()
         let root = NSMenuItem(title: BrandIcon.name, action: nil, keyEquivalent: "")
         let application = NSMenu(title: BrandIcon.name)
-        application.addItem(withTitle: "关于 Bilby", action: #selector(about), keyEquivalent: "").target = self
+        application.addItem(withTitle: L10n.text("About Bilby"), action: #selector(about), keyEquivalent: "").target = self
         application.addItem(.separator())
-        application.addItem(withTitle: "显示设置…", action: #selector(showPanel), keyEquivalent: ",").target = self
+        application.addItem(withTitle: L10n.text("Settings…"), action: #selector(showPanel), keyEquivalent: ",").target = self
         application.addItem(.separator())
-        application.addItem(withTitle: "隐藏 Bilby", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
-        let hideOthers = application.addItem(withTitle: "隐藏其他", action: #selector(NSApplication.hideOtherApplications(_:)), keyEquivalent: "h")
+        application.addItem(withTitle: L10n.text("Hide Bilby"), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        let hideOthers = application.addItem(withTitle: L10n.text("Hide Others"), action: #selector(NSApplication.hideOtherApplications(_:)), keyEquivalent: "h")
         hideOthers.keyEquivalentModifierMask = [.command, .option]
-        application.addItem(withTitle: "显示全部", action: #selector(NSApplication.unhideAllApplications(_:)), keyEquivalent: "")
+        application.addItem(withTitle: L10n.text("Show All"), action: #selector(NSApplication.unhideAllApplications(_:)), keyEquivalent: "")
         application.addItem(.separator())
-        application.addItem(withTitle: "退出 Bilby", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        application.addItem(withTitle: L10n.text("Quit Bilby"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         root.submenu = application
         menu.addItem(root)
 
-        let fileRoot = NSMenuItem(title: "文件", action: nil, keyEquivalent: "")
-        let file = NSMenu(title: "文件")
-        file.addItem(withTitle: "关闭", action: #selector(closeActiveInterface), keyEquivalent: "w").target = self
+        let fileRoot = NSMenuItem(title: L10n.text("File"), action: nil, keyEquivalent: "")
+        let file = NSMenu(title: L10n.text("File"))
+        file.addItem(withTitle: L10n.text("Close"), action: #selector(closeActiveInterface), keyEquivalent: "w").target = self
         fileRoot.submenu = file
         menu.addItem(fileRoot)
         NSApp.mainMenu = menu
@@ -121,7 +121,7 @@ import OSLog
             brandAnimation = BrandIconAnimator(button: button)
             button.setAccessibilityLabel(BrandIcon.name)
             button.setAccessibilityIdentifier("BarTidy.Main")
-            button.toolTip = "Bilby：左键展开或收起"
+            button.toolTip = L10n.text("Bilby: Click to open or close")
             button.target = self
             button.action = #selector(statusButtonActivated)
             button.sendAction(on: .leftMouseUp)
@@ -129,7 +129,7 @@ import OSLog
     }
 
     private func updateStatus() {
-        status?.button?.toolTip = "Bilby：左键展开或收起"
+        status?.button?.toolTip = L10n.text("Bilby: Click to open or close")
         if let frame = model.ownStatusItemFrame { hostedStatusAnchor = appKitRect(from: frame) }
         // Keep the live anchor for hit-testing, but position only on opening.
         // Hiding another status item must not move an already open panel.
@@ -320,8 +320,8 @@ import OSLog
 
     @objc private func about() {
         NSApp.orderFrontStandardAboutPanel(options: [
-            .applicationName: BrandIcon.name, .applicationVersion: "1.0",
-            .credits: NSAttributedString(string: "原生 macOS 27.2 状态栏管理。\n可见性桥接参考 Hidden Bar（MIT）。")
+            .applicationName: BrandIcon.name, .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.0.2",
+            .credits: NSAttributedString(string: L10n.text("Native macOS 27.2 menu bar manager.\nVisibility bridge based on Hidden Bar (MIT)."))
         ])
     }
 
@@ -348,13 +348,13 @@ import OSLog
             let item = NSStatusBar.system.statusItem(withLength: 34)
             item.autosaveName = "BTFixture.\(label).\(number)"
             let menu = NSMenu()
-            menu.addItem(withTitle: "测试图标 \(label)\(number)", action: nil, keyEquivalent: "")
-            menu.addItem(withTitle: "退出测试应用", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: L10n.format("Test icon %@", "\(label)\(number)"), action: nil, keyEquivalent: "")
+            menu.addItem(withTitle: L10n.text("Quit test app"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")
             item.menu = menu
             item.behavior = [.removalAllowed]
             item.button?.title = "\(label)\(number)"
             item.button?.setAccessibilityIdentifier("BTFixture.\(label).\(number)")
-            item.button?.toolTip = "BarTidy 测试图标 \(label)\(number)"
+            item.button?.toolTip = L10n.format("BarTidy test icon %@", "\(label)\(number)")
             item.isVisible = true
             fixtureItems.append(item)
         }

@@ -20,6 +20,8 @@ Get the DMG from [Releases](https://github.com/Evenss/Bilby/releases). This prev
 
 On first launch, grant Accessibility access in System Settings. Click the Bilby icon in the menu bar to manage your app icons.
 
+The interface supports English and Simplified Chinese and follows your macOS app language setting.
+
 ## Build from source
 
 Requires a full Xcode installation and Python 3.

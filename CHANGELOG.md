@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.0.2 — 2026-11-08 (Preview)
+
+- English and Simplified Chinese interfaces, following the macOS app language.
+- Installation-location checks and Accessibility permission recovery guidance.
+- Background verification of icon hiding, with a bounded retry and rollback of
+  newly rejected changes.
+- Preserve the last readable inventory during system interruptions and reapply
+  saved choices after unlock, wake, or menu-bar service recovery.
+- A brief ear animation on the panel's Bilby mark and regular-weight branding.
+
 ## 0.0.1 — 2026-11-08 (Preview)
 
 - Native macOS menu bar app for per-app icon visibility, tested on macOS 27.2 /
