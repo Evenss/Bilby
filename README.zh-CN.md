@@ -12,6 +12,10 @@
 
 当前仅在真机上适配过 **macOS 27.2 · Apple Silicon**，用于管理第三方应用图标。
 
+## 下载
+
+前往 [Releases](https://github.com/Evenss/Bilby/releases) 下载 DMG。此预发布版尚未公证，首次打开说明见发布页。
+
 ## 使用
 
 首次运行需在系统设置中授予辅助功能权限。点击状态栏中的 Bilby 图标即可管理。
@@ -27,5 +31,7 @@ Tools/build.sh
 ```
 
 将构建产物 `build/Bilby.app` 移入“应用程序”后打开。
+
+制作预发布 DMG：`Tools/package-dmg.sh`。
 
 [MIT 许可证](LICENSE) · [第三方声明](THIRD_PARTY_NOTICES.md) · [参与贡献](CONTRIBUTING.md)

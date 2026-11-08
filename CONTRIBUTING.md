@@ -31,6 +31,11 @@ The build includes signature verification and the source / binary input-control
 audit. `BARTIDY_SIGN_IDENTITY=- Tools/build.sh` uses an ad hoc signature for local
 validation without a signing certificate.
 
+`Tools/package-dmg.sh` builds a preview DMG and a SHA-256 checksum in `build/`.
+It defaults to ad hoc signing; a supplied `BARTIDY_SIGN_IDENTITY` can select a
+distribution identity. Packaging does not perform Apple notarization. Release
+notes must describe the actual signing / notarization status.
+
 Changes to visibility behavior also need integration tests on macOS 27.2 with
 Accessibility access. Quit Bilby first so its visibility assertion does not
 interfere, then run:
@@ -44,7 +49,7 @@ Esc / Command-W, and that switching visibility leaves the panel in place. Add
 screenshots when they help review. Restore any visibility choices changed while
 testing, and remove temporary recordings or captures.
 
-CI uses GitHub's `xcode-27` runner to build, run core tests, and audit the binary.
+CI uses GitHub's `xcode-27` runner to build the app and DMG, run core tests, and audit the binary.
 It does not launch the app or replace macOS 27.2 interaction and visibility tests.
 Local validation notes are in [VALIDATION.md](VALIDATION.md).
 

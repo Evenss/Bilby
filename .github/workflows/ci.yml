@@ -26,12 +26,12 @@ jobs:
           persist-credentials: false
       - name: Check scripts and source
         run: |
-          zsh -n Tools/build.sh Tools/integration-test.sh
+          zsh -n Tools/build.sh Tools/integration-test.sh Tools/package-dmg.sh
           python3 Tools/audit-input-control.py
       - name: Run core tests
         run: swift test
-      - name: Build and audit app
-        run: Tools/build.sh
+      - name: Build app and DMG
+        run: Tools/package-dmg.sh
       - name: Verify bundled notices
         run: |
           cmp LICENSE build/Bilby.app/Contents/Resources/LICENSE

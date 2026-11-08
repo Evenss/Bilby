@@ -19,3 +19,4 @@
 - 运行本机集成测试前先退出 Bilby，避免多个可见性断言互相影响；测试后清理临时应用。
 - 项目采用根目录 `LICENSE` 中的 MIT 许可证，构建应用时同时打包 `LICENSE` 和 `THIRD_PARTY_NOTICES.md`，保留上游版权及授权。默认 README 使用英文，`README.zh-CN.md` 保留中文，双向语言链接及内容保持一致、简短。
 - GitHub 入口使用 Remix Icon 的 `github-line.svg` 单色模板图标，点击后立即收起面板，再用默认浏览器打开 `https://github.com/Evenss/Bilby`。保留图标的独立授权，并随应用打包，不改变面板尺寸或已有开合机制。
+- 首个公开预发布版本为 `0.0.1`，标签为 `v0.0.1`。通过 `Tools/package-dmg.sh` 制作 DMG 及 SHA-256 校验文件；发布页必须准确说明签名和公证状态，不能把开发证书或 ad hoc 签名称为 Developer ID 公证。打包不更改用户当前安装的应用或隐藏设置。

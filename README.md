@@ -12,6 +12,10 @@ A native macOS menu bar tool for showing and hiding third-party app icons.
 
 Currently tested only on **macOS 27.2 · Apple Silicon**.
 
+## Download
+
+Get the DMG from [Releases](https://github.com/Evenss/Bilby/releases). This preview is not notarized; see the release notes for first-launch guidance.
+
 ## Usage
 
 On first launch, grant Accessibility access in System Settings. Click the Bilby icon in the menu bar to manage your app icons.
@@ -27,5 +31,7 @@ Tools/build.sh
 ```
 
 Move `build/Bilby.app` to Applications and open it.
+
+To create a preview DMG: `Tools/package-dmg.sh`.
 
 [MIT License](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [Contributing](CONTRIBUTING.md)
