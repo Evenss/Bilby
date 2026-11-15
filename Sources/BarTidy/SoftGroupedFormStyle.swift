@@ -4,9 +4,9 @@ import SwiftUI
 struct SoftGroupedFormStyle: FormStyle {
     func makeBody(configuration: Configuration) -> some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 20) {
                 ForEach(sections: configuration.content) { section in
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 8) {
                         section.header
                             .padding(.horizontal, 12)
                             .accessibilityElement(children: .combine)
@@ -17,7 +17,7 @@ struct SoftGroupedFormStyle: FormStyle {
                                 row
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.horizontal, 12)
-                                    .padding(.vertical, 8)
+                                    .padding(.vertical, 6)
                                     .transition(.identity)
                             }
                         }
@@ -28,7 +28,7 @@ struct SoftGroupedFormStyle: FormStyle {
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.top, 14)
+            .padding(.top, 12)
             .padding(.bottom, 4)
         }
         .scrollBounceBehavior(.basedOnSize)

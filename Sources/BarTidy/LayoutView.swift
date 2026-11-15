@@ -138,32 +138,77 @@ struct LayoutView: View {
                 ProgressView(model.isWaitingForInventory ? L10n.text("Waiting for the menu bar…") : L10n.text("Reading the menu bar…"))
             }
             else {
-                ContentUnavailableView(L10n.text("No apps to manage yet"), systemImage: "menubar.rectangle",
-                                       description: Text(L10n.text("Apps with menu bar icons will appear here.")))
+                stateMessage(symbol: "menubar.rectangle",
+                             title: L10n.text("No apps to manage yet"),
+                             message: L10n.text("Apps with menu bar icons will appear here."))
+                    .frame(maxWidth: 310)
+                    .padding(.horizontal, 32)
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var permission: some View {
-        VStack(spacing: 18) {
-            Image(systemName: "hand.raised.circle").font(.system(size: 40, weight: .light)).foregroundStyle(.secondary)
-            Text(model.permissionWasGranted ? L10n.text("Restore Accessibility access") : L10n.text("Allow Accessibility access")).font(.title3.weight(.semibold))
-            Text(model.permissionWasGranted ? L10n.text("Your choices are saved. Re-enable Bilby in System Settings. If access still fails after an update, remove its old entry and add Bilby from Applications again.") : L10n.text("Enable Bilby in Privacy & Security → Accessibility. If Bilby isn't listed, use + to add it from Applications."))
-                .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
-            Button(L10n.text("Open Accessibility Settings")) { close(); model.requestPermission() }.buttonStyle(.borderedProminent)
-            Button(L10n.text("Show Bilby in Finder")) { close(); model.showInFinder() }.buttonStyle(.link)
-        }.frame(maxWidth: .infinity, maxHeight: .infinity).padding(30)
+        VStack(spacing: 20) {
+            stateMessage(symbol: "hand.raised.circle",
+                         title: model.permissionWasGranted ? L10n.text("Restore Accessibility access") : L10n.text("Allow Accessibility access"),
+                         message: model.permissionWasGranted ? L10n.text("Your choices are saved. Re-enable Bilby in Privacy & Security → Accessibility.") : L10n.text("Enable Bilby in Privacy & Security → Accessibility."),
+                         detail: model.permissionWasGranted ? L10n.text("Still not working? Remove the old entry and add Bilby from Applications again.") : L10n.text("Not listed? Use + to add Bilby from Applications."))
+            VStack(spacing: 10) {
+                Button(L10n.text("Open Accessibility Settings")) { close(); model.requestPermission() }.buttonStyle(.borderedProminent)
+                Button(L10n.text("Show Bilby in Finder")) { close(); model.showInFinder() }.buttonStyle(.link)
+            }
+            .controlSize(.regular)
+        }
+        .frame(maxWidth: 310)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 32)
+        .padding(.vertical, 28)
     }
 
     private var installation: some View {
-        VStack(spacing: 18) {
-            Image(systemName: "arrow.down.app").font(.system(size: 40, weight: .light)).foregroundStyle(.secondary)
-            Text(L10n.text("Install Bilby first")).font(.title3.weight(.semibold))
-            Text(L10n.text("Move Bilby to Applications, then open it there and allow Accessibility access."))
-                .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
-            Button(L10n.text("Show Bilby in Finder")) { close(); model.showInFinder() }.buttonStyle(.borderedProminent)
-            Button(L10n.text("Open Applications Folder")) { close(); model.openApplicationsFolder() }.buttonStyle(.link)
-        }.frame(maxWidth: .infinity, maxHeight: .infinity).padding(30)
+        VStack(spacing: 20) {
+            stateMessage(symbol: "arrow.down.app",
+                         title: L10n.text("Install Bilby first"),
+                         message: L10n.text("Move Bilby to Applications and open it there."),
+                         detail: L10n.text("Then allow Accessibility access to manage menu bar icons."))
+            VStack(spacing: 10) {
+                Button(L10n.text("Show Bilby in Finder")) { close(); model.showInFinder() }.buttonStyle(.borderedProminent)
+                Button(L10n.text("Open Applications Folder")) { close(); model.openApplicationsFolder() }.buttonStyle(.link)
+            }
+            .controlSize(.regular)
+        }
+        .frame(maxWidth: 310)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 32)
+        .padding(.vertical, 28)
+    }
+
+    private func stateMessage(symbol: String, title: String, message: String, detail: String? = nil) -> some View {
+        VStack(spacing: 0) {
+            Image(systemName: symbol)
+                .font(.system(size: 32, weight: .light))
+                .foregroundStyle(.secondary)
+                .frame(height: 36)
+                .accessibilityHidden(true)
+                .padding(.bottom, 12)
+            Text(title)
+                .font(.system(size: 15, weight: .semibold))
+                .accessibilityAddTraits(.isHeader)
+                .padding(.bottom, 8)
+            Text(message)
+                .font(.system(size: 13))
+                .foregroundStyle(.secondary)
+                .lineSpacing(2)
+            if let detail {
+                Text(detail)
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                    .lineSpacing(2)
+                    .padding(.top, 8)
+            }
+        }
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private func icon(_ item: MenuBarItem) -> NSImage {

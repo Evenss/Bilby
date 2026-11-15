@@ -33,8 +33,7 @@ struct StatusPanelView: View {
             .frame(minWidth: 28, minHeight: 28)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(.secondary)
+        .buttonStyle(PanelActionButtonStyle())
         .help(L10n.text("Open GitHub repository"))
         .accessibilityLabel(L10n.text("Open Bilby's GitHub repository"))
         .accessibilityIdentifier("Bilby.GitHub")
@@ -57,12 +56,13 @@ struct StatusPanelView: View {
 
             HStack {
                 Spacer()
-                Button(L10n.text("Quit"), action: quit)
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 6)
-                    .frame(height: 28)
-                    .contentShape(Rectangle())
+                Button(action: quit) {
+                    Text(L10n.text("Quit"))
+                        .padding(.horizontal, 6)
+                        .frame(height: 28)
+                        .contentShape(Rectangle())
+                }
+                    .buttonStyle(PanelActionButtonStyle())
                     .keyboardShortcut("q", modifiers: .command)
                     .help(L10n.text("Quit Bilby and restore all icons"))
                     .accessibilityIdentifier("Bilby.Quit")

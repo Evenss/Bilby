@@ -321,7 +321,7 @@ import OSLog
     @objc private func about() {
         NSApp.orderFrontStandardAboutPanel(options: [
             .applicationName: BrandIcon.name,
-            .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.0.3",
+            .applicationVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.0.4",
             .version: "",
             .credits: NSAttributedString(string: L10n.text("Native macOS 27.2 menu bar manager.\nVisibility bridge based on Hidden Bar (MIT)."))
         ])

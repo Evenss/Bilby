@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.0.4 — 2026-11-15 (Preview)
+
+- Add subtle hover, pressed, and keyboard-focus feedback to the GitHub and Quit
+  buttons.
+- Tighten application rows and section spacing while keeping native switches.
+- Unify installation, Accessibility, and empty-state layouts, with shorter
+  English and Simplified Chinese guidance.
+
 ## 0.0.3 — 2026-11-08 (Preview)
 
 - Move the GitHub shortcut to the upper-right corner and add
